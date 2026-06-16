@@ -7,11 +7,7 @@ configuration:
   analytics: null
   locale: zh-CN
   baseUrl: notes.tttrove.qzz.io
-  ignorePatterns:
-    - private
-    - templates
-    - .obsidian
-    - skills
+  ignorePatterns: []
   theme:
     fontOrigin: googleFonts
     cdnCaching: true
