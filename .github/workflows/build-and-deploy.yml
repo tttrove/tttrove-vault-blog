@@ -47,11 +47,9 @@ jobs:
           ls -la content/
           echo "=== md file count ==="
           find content -name "*.md" | wc -l
-          echo "=== quartz location ==="
-          which quartz || true
-          ls -la node_modules/.bin/quartz || true
-          echo "=== building ==="
-          node ./node_modules/.bin/quartz build -d "$PWD/content" -v 2>&1
+          echo "=== building with node ==="
+          chmod +x ./quartz/bootstrap-cli.mjs
+          node ./quartz/bootstrap-cli.mjs build -d content -v 2>&1
 
       - name: Deploy to Cloudflare Pages
         env:
