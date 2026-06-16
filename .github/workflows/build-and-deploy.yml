@@ -40,7 +40,7 @@ jobs:
         run: npx quartz plugin install
 
       - name: Build site
-        run: npx quartz build
+        run: npx quartz build -d content -v
 
       - name: Deploy to Cloudflare Pages
         env:
