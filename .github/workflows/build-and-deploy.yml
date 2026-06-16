@@ -23,6 +23,10 @@ jobs:
           rm -rf content
           git clone --depth=1 https://github.com/tttrove/tttrove-vault.git content
           rm -rf content/.git content/.obsidian content/.github
+          echo "=== content directory listing ==="
+          ls -la content/
+          echo "=== recursive md files ==="
+          find content/ -name "*.md" | head -30
 
       - name: Setup Node
         uses: actions/setup-node@v4
