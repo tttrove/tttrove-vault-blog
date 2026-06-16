@@ -34,10 +34,10 @@ jobs:
         run: npm ci
 
       - name: Install Quartz plugins
-        run: npx quartz plugin install
+        run: npm run quartz -- plugin install
 
       - name: Build site
-        run: npx quartz build
+        run: npm run quartz -- build
 
       - name: Deploy to Cloudflare Pages
         env:
