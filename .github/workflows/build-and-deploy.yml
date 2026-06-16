@@ -45,7 +45,8 @@ jobs:
           pwd
           echo "=== content files ==="
           ls -la content/
-          npx quartz build -d content -v
+          echo "=== fs walk ==="
+          node -e "const fs=require('fs'),path=require('path');function walk(d){const r=[];for(const e of fs.readdirSync(d,{withFileTypes:true})){const p=path.join(d,e.name);if(e.isDirectory())r.push(...walk(p));else if(e.name.endsWith('.md'))r.push(p)}return r} console.log(walk('content'))"
 
       - name: Deploy to Cloudflare Pages
         env:
