@@ -48,7 +48,7 @@ jobs:
           echo "=== md file count ==="
           find content -name "*.md" | wc -l
           find content -name "*.md" | head -5
-          npx quartz build -d content -v
+          npx quartz build -d "$PWD/content" -v 2>&1
 
       - name: Deploy to Cloudflare Pages
         env:
