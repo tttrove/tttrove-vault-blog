@@ -22,11 +22,7 @@ jobs:
         run: |
           rm -rf content
           git clone --depth=1 https://github.com/tttrove/tttrove-vault.git content
-          rm -rf content/.git content/.obsidian content/.github content/.gitignore content/.gitattributes
-          echo "=== content directory listing ==="
-          ls -la content/
-          echo "=== recursive md files ==="
-          find content/ -name "*.md" | head -30
+          rm -rf content/.obsidian content/.github content/.gitignore content/.gitattributes
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -40,16 +36,7 @@ jobs:
         run: npx quartz plugin install
 
       - name: Build site
-        run: |
-          echo "=== pwd ==="
-          pwd
-          echo "=== content files ==="
-          ls -la content/
-          echo "=== md file count ==="
-          find content -name "*.md" | wc -l
-          echo "=== building with node ==="
-          chmod +x ./quartz/bootstrap-cli.mjs
-          node ./quartz/bootstrap-cli.mjs build -d content -v 2>&1
+        run: npx quartz build
 
       - name: Deploy to Cloudflare Pages
         env:
