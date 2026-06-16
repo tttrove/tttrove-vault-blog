@@ -47,8 +47,11 @@ jobs:
           ls -la content/
           echo "=== md file count ==="
           find content -name "*.md" | wc -l
-          find content -name "*.md" | head -5
-          npx quartz build -d "$PWD/content" -v 2>&1
+          echo "=== quartz location ==="
+          which quartz || true
+          ls -la node_modules/.bin/quartz || true
+          echo "=== building ==="
+          node ./node_modules/.bin/quartz build -d "$PWD/content" -v 2>&1
 
       - name: Deploy to Cloudflare Pages
         env:
