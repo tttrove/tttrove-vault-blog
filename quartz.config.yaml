@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
 configuration:
   pageTitle: tttrove 笔记
-  pageTitleSuffix: ""
+  pageTitleSuffix: " - tttrove 笔记"
   enableSPA: true
   enablePopovers: true
   analytics: null
