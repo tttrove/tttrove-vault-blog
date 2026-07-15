@@ -126,7 +126,11 @@ plugins:
     layout:
       position: left
       priority: 50
-  - source: github:quartz-community/graph
+  # Upstream fix for quartz-community/graph#2; switch back after PR #5 is merged.
+  - source:
+      name: graph
+      repo: github:enihsyou/quartz-community-graph
+      ref: 16db4d3012947affea0b1f8dbd375eb62af03d5e
     enabled: true
     layout:
       position: right

@@ -1,3 +1,63 @@
 @use "./variables.scss" as *;
 
-// put your custom CSS here!
+@media all and ($desktop) {
+  html {
+    scroll-padding-top: 4rem;
+  }
+
+  .page > #quartz-body > .sidebar {
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+    padding-top: 3rem;
+  }
+
+  .page > #quartz-body > .center {
+    grid-column: 2;
+    grid-row: 1 / 4;
+    box-sizing: border-box;
+    padding-top: 3rem;
+  }
+
+  .page > #quartz-body .page-header {
+    display: contents;
+  }
+
+  .page-header > .popover-hint {
+    display: contents;
+  }
+
+  .page-header .breadcrumb-container {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0.75rem 0;
+    background: var(--light);
+    border-bottom: 1px solid var(--lightgray);
+  }
+
+  .center > footer {
+    margin-top: 2rem;
+  }
+
+  .right.sidebar > * {
+    min-height: 0;
+  }
+
+  .right.sidebar > .graph {
+    flex: 0 0 auto;
+  }
+
+  .right.sidebar > .toc {
+    flex: 1 1 0;
+  }
+
+  .right.sidebar > .toc > .toc-content {
+    min-height: 0;
+    max-height: none;
+    margin-bottom: 0;
+    overflow-y: auto;
+  }
+}

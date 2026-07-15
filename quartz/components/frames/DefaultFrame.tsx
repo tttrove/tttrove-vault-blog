@@ -48,13 +48,13 @@ export const DefaultFrame: PageFrame = {
               <BodyComponent {...componentData} />
             ))}
           </div>
+          <Footer {...componentData} />
         </div>
         <div class="right sidebar">
           {right.map((BodyComponent) => (
             <BodyComponent {...componentData} />
           ))}
         </div>
-        <Footer {...componentData} />
       </>
     )
   },
