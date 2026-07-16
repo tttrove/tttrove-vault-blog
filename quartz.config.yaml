@@ -7,7 +7,15 @@ configuration:
   analytics: null
   locale: zh-CN
   baseUrl: notes.tttrove.qzz.io
-  ignorePatterns: []
+  ignorePatterns:
+    - .obsidian
+    - .agents
+    - .opencode
+    - .github
+    - AGENTS.md
+    - opencode.json
+    - skills
+    - 提示词
   theme:
     fontOrigin: googleFonts
     cdnCaching: true

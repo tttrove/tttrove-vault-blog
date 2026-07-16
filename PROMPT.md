@@ -35,15 +35,18 @@ notes.tttrove.qzz.io
 
 | 项目 | 仓库 | 本地路径 |
 |---|---|---|
-| 笔记仓库 | tttrove/ttrove-vault (public) | `C:\Users\59507\Projects\ttrove-vault` |
-| 博客仓库 | tttrove/ttrove-vault-blog (public) | `C:\Users\59507\Projects\ttrove-vault-blog` |
+| 笔记内容仓库（私有） | `tttrove/tttrove-vault` | `C:\Users\59507\Projects\obsidian\tttrove-vault` |
+| Quartz 博客仓库 | `tttrove/tttrove-vault-blog` | `C:\Users\59507\Projects\tttrove-vault-blog` |
+
+- `tttrove-vault` 是唯一的笔记内容源，保持私有；博客工作流通过 `NOTES_REPO_TOKEN` 检出其内容到本地 `content/` 目录。
+- `tttrove-vault-blog` 保存 Quartz 配置、构建工作流和部署代码，不直接维护笔记正文。
 
 ## 4. 技术选型
 
 - **站点生成器**: Quartz v5.0.0（基于 Node.js，天然支持 Obsidian wikilinks、双链、标签）
 - **部署**: Cloudflare Pages（通过 wrangler CLI 推送静态文件）
 - **触发**: GitHub Actions + repository_dispatch
-- **域名**: `notes.ttrove.qzz.io`（`ttrove.qzz.io` 的二级域，托管在 Cloudflare DNS）
+- **域名**: `notes.tttrove.qzz.io`（`tttrove.qzz.io` 的二级域，托管在 Cloudflare DNS）
 - **Node.js**: v22
 
 ## 5. GitHub Secrets
@@ -63,9 +66,9 @@ notes.tttrove.qzz.io
 
 ## 6. Cloudflare Pages 配置
 
-- 项目名: `ttrove-vault-blog`
-- 项目 pages.dev 地址: `https://ttrove-vault-blog.pages.dev/`
-- 自定义域名: `notes.ttrove.qzz.io`（状态: active, SSL 正常）
+- 项目名: `tttrove-vault-blog`
+- 项目 pages.dev 地址: `https://tttrove-vault-blog.pages.dev/`
+- 自定义域名: `notes.tttrove.qzz.io`（状态: active, SSL 正常）
 - 部署方式: Direct Upload（通过 wrangler CLI，不绑定 GitHub）
 
 ## 7. GitHub Actions 工作流
@@ -84,7 +87,7 @@ jobs:
       - uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.BLOG_REPO_TOKEN }}
-          repository: tttrove/ttrove-vault-blog
+          repository: tttrove/tttrove-vault-blog
           event-type: notes-updated
           client-payload: |
             {"sha": "${{ github.sha }}", "ref": "${{ github.ref }}"}
@@ -115,7 +118,7 @@ jobs:
       - name: Clone notes content
         run: |
           rm -rf content
-          git clone --depth=1 https://github.com/ttrove/ttrove-vault.git content
+          git clone --depth=1 https://github.com/tttrove/tttrove-vault.git content
           # ⚠️ 千万不要删 content/.git！（见 bug #4）
           rm -rf content/.obsidian content/.github content/.gitignore content/.gitattributes
 
@@ -141,7 +144,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy public --project-name=ttrove-vault-blog --branch=main
+          command: pages deploy public --project-name=tttrove-vault-blog --branch=main
 ```
 
 ## 8. Quartz v5 配置关键点
@@ -156,7 +159,7 @@ configuration:
   enablePopovers: true
   analytics: null
   locale: zh-CN
-  baseUrl: notes.ttrove.qzz.io
+  baseUrl: notes.tttrove.qzz.io
   ignorePatterns:
     - private
     - templates
@@ -164,12 +167,12 @@ configuration:
     - skills
 ```
 
-全文见 `C:\Users\59507\Projects\ttrove-vault-blog\quartz.config.yaml`
+全文见 `C:\Users\59507\Projects\tttrove-vault-blog\quartz.config.yaml`
 
 ### 本地构建命令
 
 ```bash
-cd C:\Users\59507\Projects\ttrove-vault-blog
+cd C:\Users\59507\Projects\tttrove-vault-blog
 npx quartz build          # 构建到 public/
 npx quartz build --serve  # 构建 + 本地预览（localhost:8080）
 ```
@@ -195,7 +198,7 @@ npx quartz build --serve  # 构建 + 本地预览（localhost:8080）
 - **现象**: content/ 目录有 30 个 .md 文件（find 确认），但 `npx quartz build` 显示 `Found 0 input files`
 - **原因**: Quartz v5 的 `quartz/util/glob.ts` 中使用 `globby` 并设置了 `gitignore: true`。
   当我们执行 `rm -rf content/.git` 后，`globby` 无法在 content/ 内找到 .git，于是向上走到
-  博客仓库的 .git（`ttrove-vault-blog/.git`），使用博客仓库的 `.gitignore`。
+  博客仓库的 .git（`tttrove-vault-blog/.git`），使用博客仓库的 `.gitignore`。
   而博客仓库的 `.gitignore` 中有 `content/` 规则，导致所有笔记文件被忽略。
 - **修复**: **必须保留 `content/.git`**。只删 `.obsidian`、`.github`、`.gitignore`、`.gitattributes`。
   这样 globby 使用笔记仓库的 `.gitignore`，不会误杀 .md 文件。
@@ -214,40 +217,25 @@ npx quartz build --serve  # 构建 + 本地预览（localhost:8080）
 | 创建 Cloudflare API Token（Pages Edit 权限） | ✅ |
 | 创建 fine-grained PAT（触发 repository_dispatch） | ✅ |
 | 创建 Cloudflare Pages 项目 tttrove-vault-blog | ✅ |
-| 绑定自定义域 notes.ttrove.qzz.io | ✅ |
+| 绑定自定义域 notes.tttrove.qzz.io | ✅ |
 | 创建笔记仓库首页 index.md | ✅ |
 | 端到端测试（push → notify → build → deploy → 域名可访问） | ✅ |
 
-## 11. Obsidian 笔记结构
+## 11. Obsidian 内容组织原则
 
-```
-ttrove-vault/
-├── index.md                    # 博客首页
-├── Linux笔记/                  # Linux 运维、编译等
-│   ├── Ubuntu Netplan 静态 IP 配置最佳实践.md
-│   ├── Nginx 学习与高级配置指南.md
-│   ├── Linux 服务器入侵排查手册.md
-│   └── ... (共 15 篇)
-├── 漏洞/                       # 内核漏洞分析
-│   ├── Dirty Pipe: Linux 内核管道 Page Cache 覆写提权漏洞 (CVE-2022-0847).md
-│   ├── Dirty Cow: Linux内核写时复制竞态条件提权漏洞 (CVE-2016-5195).md
-│   └── ... (共 9 篇)
-├── vmware笔记/                  # VMware 配置
-│   └── vmware开机自启虚拟机后台运行.md
-├── 提示词/                     # 提示词工程
-│   └── Linux服务器入侵排查手册生成提示词.md
-├── skills/                     # ⚠️ 不发布（在 ignorePatterns 中）
-└── assets/                     # 附件图片（Obsidian 自定义附件路径 `./assets/${noteFileName}`）
-```
-
-配置了 ignorePatterns: [private, templates, .obsidian, skills]，`skills/` 目录不会被发布
+- `tttrove-vault` 是唯一的笔记内容源，实际主题目录和笔记数量会持续变化，不在本说明中维护具体目录树或文章清单。
+- `index.md` 是站点首页，负责提供当前有效的分类入口；内容分类应以笔记仓库中的实际目录和首页为准。
+- 笔记按主题放入现有目录，附件存放在笔记同级的 `./assets/${noteFileName}` 目录。
+- `.agents/skills/` 保存项目级 Agent Skills，`AGENTS.md` 保存仓库协作规则，`opencode.json` 注册 OpenCode 项目配置。这些文件由 Git 同步，但不属于公开站点内容。
+- 博客工作流和 Quartz `ignorePatterns` 会排除 `.agents/`、`.opencode/`、`.obsidian/`、`.github/`、`AGENTS.md`、`opencode.json` 以及兼容保留的旧 `skills/`、`提示词/` 目录。
+- 内容仓库的目录、分类或笔记数量发生变化时，不需要同步修改本节；只有内容组织原则或发布边界变化时才更新本文档。
 
 ## 12. 日常使用流程
 
-1. 在 Obsidian 中写笔记（`C:\Users\59507\Projects\ttrove-vault`）
+1. 在 Obsidian 中写笔记（`C:\Users\59507\Projects\obsidian\tttrove-vault`）
 2. git commit && git push
 3. GitHub Actions 自动触发
-4. 约 2 分钟后，https://notes.ttrove.qzz.io 自动更新
+4. 约 2 分钟后，https://notes.tttrove.qzz.io 自动更新
 
 ## 13. 继续开发的建议
 
@@ -257,8 +245,8 @@ ttrove-vault/
 2. 登录 gh: `gh auth login`（SSH 协议，使用现有密钥对）
 3. Clone 两个仓库:
    ```bash
-   git clone git@github.com:ttrove/ttrove-vault.git
-   git clone git@github.com:ttrove/ttrove-vault-blog.git
+   git clone git@github.com:tttrove/tttrove-vault.git
+   git clone git@github.com:tttrove/tttrove-vault-blog.git
    ```
 4. 博客仓库本地开发:
    ```bash
@@ -270,7 +258,7 @@ ttrove-vault/
 5. 如果需要本地有笔记内容，手动 clone 到 content/:
    ```bash
    rm -rf content
-   git clone --depth=1 git@github.com:ttrove/ttrove-vault.git content
+   git clone --depth=1 git@github.com:tttrove/tttrove-vault.git content
    ```
 6. 修改博客主题/配置后，直接 push，CI 会自动部署
 
@@ -280,10 +268,10 @@ ttrove-vault/
 |---|---|
 | API Token | `<从 Cloudflare Dashboard → API Tokens 获取>` |
 | Account ID | `<从 Cloudflare Dashboard 右下角获取>` |
-| Pages 项目名 | `ttrove-vault-blog` |
-| pages.dev URL | `ttrove-vault-blog.pages.dev` |
-| 自定义域 | `notes.ttrove.qzz.io` |
-| Zone ID (ttrove.qzz.io) | `33dd00b73f47b6d5365699ad11b940c2` |
+| Pages 项目名 | `tttrove-vault-blog` |
+| pages.dev URL | `tttrove-vault-blog.pages.dev` |
+| 自定义域 | `notes.tttrove.qzz.io` |
+| Zone ID (tttrove.qzz.io) | `33dd00b73f47b6d5365699ad11b940c2` |
 
 ## 15. GitHub PAT（⚠️ 敏感，勿外泄）
 

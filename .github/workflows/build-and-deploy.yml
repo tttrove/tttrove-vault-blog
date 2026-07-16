@@ -27,12 +27,12 @@ jobs:
           fetch-depth: 1
 
       - name: Clean notes metadata
-        run: rm -rf content/.obsidian content/.github content/.gitignore content/.gitattributes
+        run: rm -rf content/.obsidian content/.agents content/.opencode content/.github content/.gitignore content/.gitattributes content/AGENTS.md content/opencode.json content/skills content/提示词
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: "22"
 
       - name: Install dependencies
         run: npm ci
