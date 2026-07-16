@@ -24,7 +24,7 @@ jobs:
           repository: tttrove/tttrove-vault
           token: ${{ secrets.NOTES_REPO_TOKEN }}
           path: content
-          fetch-depth: 1
+          fetch-depth: 0
 
       - name: Clean notes metadata
         run: rm -rf content/.obsidian content/.agents content/.opencode content/.github content/.gitignore content/.gitattributes content/AGENTS.md content/opencode.json content/skills content/提示词
@@ -39,6 +39,20 @@ jobs:
 
       - name: Install Quartz plugins
         run: npx quartz plugin install
+
+      - name: Apply custom Explorer sorting
+        run: |
+          rm -rf .quartz/plugins/explorer/.git
+          rm -rf .quartz/plugins/content-index/.git
+          rm -rf .quartz/plugins/note-properties/.git
+          git restore .quartz/plugins/explorer/src/components/Explorer.tsx
+          git restore .quartz/plugins/explorer/src/components/scripts/explorer.inline.ts
+          git restore .quartz/plugins/explorer/src/components/styles/explorer.scss
+          git restore .quartz/plugins/content-index/src/emitter.ts
+          git restore .quartz/plugins/note-properties/src/transformer.ts
+          npm --prefix .quartz/plugins/explorer run build
+          npm --prefix .quartz/plugins/content-index run build
+          npm --prefix .quartz/plugins/note-properties run build
 
       - name: Build site
         run: npx quartz build
