@@ -54,6 +54,9 @@ jobs:
           git restore .quartz/plugins/explorer/src/components/styles/explorer.scss
           git restore .quartz/plugins/content-index/src/emitter.ts
           git restore .quartz/plugins/note-properties/src/transformer.ts
+          npm --prefix .quartz/plugins/explorer install --include=dev
+          npm --prefix .quartz/plugins/content-index install --include=dev
+          npm --prefix .quartz/plugins/note-properties install --include=dev
           npm --prefix .quartz/plugins/explorer run build
           npm --prefix .quartz/plugins/content-index run build
           npm --prefix .quartz/plugins/note-properties run build
