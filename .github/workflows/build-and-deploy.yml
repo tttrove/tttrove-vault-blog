@@ -38,7 +38,11 @@ jobs:
         run: npm ci
 
       - name: Install Quartz plugins
-        run: npx quartz plugin install
+        run: |
+          rm -rf .quartz/plugins/explorer
+          rm -rf .quartz/plugins/content-index
+          rm -rf .quartz/plugins/note-properties
+          npx quartz plugin install
 
       - name: Apply custom Explorer sorting
         run: |
