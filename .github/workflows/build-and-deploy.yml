@@ -46,9 +46,6 @@ jobs:
 
       - name: Apply custom Explorer sorting
         run: |
-          rm -rf .quartz/plugins/explorer/.git
-          rm -rf .quartz/plugins/content-index/.git
-          rm -rf .quartz/plugins/note-properties/.git
           git restore .quartz/plugins/explorer/src/components/Explorer.tsx
           git restore .quartz/plugins/explorer/src/components/scripts/explorer.inline.ts
           git restore .quartz/plugins/explorer/src/components/styles/explorer.scss
@@ -63,6 +60,12 @@ jobs:
 
       - name: Build site
         run: npx quartz build
+
+      - name: Verify custom Explorer sorting
+        run: |
+          grep -q 'explorer-sort' public/index.html
+          grep -Rq 'explorerSort' public/static
+          grep -q '"modified"' public/static/contentIndex.json
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
