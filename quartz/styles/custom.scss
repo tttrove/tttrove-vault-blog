@@ -1,5 +1,26 @@
 @use "./variables.scss" as *;
 
+// ============================================================================
+// Mobile explorer overlay overflow fix
+// ----------------------------------------------------------------------------
+// On mobile, #quartz-body has `padding: 0 1rem`, so the left sidebar (the
+// positioning context for the absolutely-positioned .explorer-content overlay)
+// starts at x = 1rem instead of the viewport edge. The upstream rule hides the
+// collapsed overlay with `transform: translateX(-100vw)`, which undershoots by
+// exactly that 1rem — leaving the overlay's right edge on-screen and only
+// masked by `visibility: hidden`. On some mobile browsers that residual strip
+// bleeds a column of explorer text into the article. Push the overlay fully
+// off-screen (accounting for the 1rem inset on both sides) so it can never leak.
+@media all and ($mobile) {
+  .page > #quartz-body .explorer .explorer-content,
+  .page > #quartz-body .explorer.collapsed > .explorer-content {
+    transform: translateX(calc(-100vw - 2rem));
+  }
+  .page > #quartz-body .explorer:not(.collapsed) > .explorer-content {
+    transform: translateX(-1rem);
+  }
+}
+
 @media all and ($desktop) {
   html {
     scroll-padding-top: 4rem;
