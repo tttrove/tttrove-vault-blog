@@ -16,10 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout blog code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Clone notes content
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: tttrove/tttrove-vault
           token: ${{ secrets.NOTES_REPO_TOKEN }}
@@ -30,7 +30,7 @@ jobs:
         run: rm -rf content/.obsidian content/.agents content/.opencode content/.github content/.gitignore content/.gitattributes content/AGENTS.md content/opencode.json content/skills content/提示词
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: "22"
 
@@ -68,7 +68,7 @@ jobs:
           grep -q '"modified"' public/static/contentIndex.json
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
